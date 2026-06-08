@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Nayakatrip</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-display {
+      font-family: 'Outfit', sans-serif;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-modal {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-teal-500 selection:text-white">
+
+  <!-- Background Orbs -->
+  <div class="fixed top-0 right-0 w-[500px] h-[500px] bg-teal-950/20 rounded-full blur-[140px] -z-10"></div>
+  <div class="fixed bottom-0 left-0 w-[500px] h-[500px] bg-slate-900/30 rounded-full blur-[140px] -z-10"></div>
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="/" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-teal-500 to-sky-500 flex items-center justify-center text-white font-display font-black text-base shadow-lg">N</a>
+        <span class="font-display font-extrabold text-lg tracking-tight">Nayaka<span class="text-teal-400 font-light">trip</span></span>
+        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400 border border-slate-700">Dashboard</span>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <span class="text-xs text-slate-400 hidden sm:inline">Logged in as <strong class="text-slate-200"><%= admin.username %></strong></span>
+        <a href="/admin/logout" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-200 text-xs font-semibold hover:bg-red-900 hover:text-white transition-colors duration-200">
+          Sign Out
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- Notification Banners -->
+    <% if (typeof message !== 'undefined' && message) { %>
+      <div id="toast-success" class="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-900/50 text-xs text-emerald-400 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span>✓</span>
+          <span><%= message %></span>
+        </div>
+        <button onclick="document.getElementById('toast-success').remove()" class="text-emerald-500 hover:text-emerald-300 font-bold">✕</button>
+      </div>
+    <% } %>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div id="toast-error" class="p-4 rounded-2xl bg-rose-950/40 border border-rose-900/50 text-xs text-rose-400 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span>✕</span>
+          <span><%= error %></span>
+        </div>
+        <button onclick="document.getElementById('toast-error').remove()" class="text-rose-500 hover:text-rose-300 font-bold">✕</button>
+      </div>
+    <% } %>
+
+    <!-- Statistics Overview Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div class="glass-card p-6 rounded-3xl shadow-lg">
+        <div class="text-slate-400 text-xs font-semibold tracking-wider uppercase">Total Bookings</div>
+        <div class="text-3xl font-display font-black text-white mt-2"><%= stats.totalBookings %></div>
+      </div>
+      <div class="glass-card p-6 rounded-3xl shadow-lg">
+        <div class="text-amber-400 text-xs font-semibold tracking-wider uppercase">Pending</div>
+        <div class="text-3xl font-display font-black text-white mt-2"><%= stats.pendingBookings %></div>
+      </div>
+      <div class="glass-card p-6 rounded-3xl shadow-lg">
+        <div class="text-emerald-400 text-xs font-semibold tracking-wider uppercase">Approved</div>
+        <div class="text-3xl font-display font-black text-white mt-2"><%= stats.approvedBookings %></div>
+      </div>
+      <div class="glass-card p-6 rounded-3xl shadow-lg">
+        <div class="text-teal-400 text-xs font-semibold tracking-wider uppercase">Revenue Est.</div>
+        <div class="text-3xl font-display font-black text-white mt-2">$<%= stats.totalRevenue.toLocaleString() %></div>
+      </div>
+    </div>
+
+    <!-- Booking Requests Section -->
+    <div class="glass-card rounded-[2rem] overflow-hidden shadow-xl">
+      <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <h2 class="font-display font-bold text-xl text-white">Booking Enquiries</h2>
+          <p class="text-xs text-slate-400 mt-1">Manage recent trip registration tickets and assign their status</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm whitespace-nowrap">
+          <thead class="bg-slate-900/60 text-xs text-slate-400 uppercase font-semibold border-b border-slate-800/80">
+            <tr>
+              <th class="px-6 py-4">ID</th>
+              <th class="px-6 py-4">Client</th>
+              <th class="px-6 py-4">Phone</th>
+              <th class="px-6 py-4">Trip Package</th>
+              <th class="px-6 py-4">Date</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/50">
+            <% if (bookings.length === 0) { %>
+              <tr>
+                <td colspan="7" class="px-6 py-8 text-center text-slate-500">No booking requests found.</td>
+              </tr>
+            <% } else { %>
+              <% bookings.forEach(function(booking) { %>
+                <tr class="hover:bg-slate-900/20 transition-colors">
+                  <td class="px-6 py-4 font-mono text-slate-500">#<%= booking.id %></td>
+                  <td class="px-6 py-4 font-semibold text-slate-200"><%= booking.customerName %></td>
+                  <td class="px-6 py-4 font-mono text-xs text-slate-400"><%= booking.customerPhone %></td>
+                  <td class="px-6 py-4">
+                    <% if (booking.trip) { %>
+                      <div class="font-medium text-slate-200"><%= booking.trip.title %></div>
+                      <div class="text-[10px] text-slate-500">$<%= booking.trip.price %> • <%= booking.trip.destination %></div>
+                    <% } else { %>
+                      <span class="text-rose-400 italic">Deleted Package</span>
+                    <% } %>
+                  </td>
+                  <td class="px-6 py-4 text-xs text-slate-400">
+                    <%= new Date(booking.createdAt).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) %>
+                  </td>
+                  <td class="px-6 py-4">
+                    <% if (booking.status === 'PENDING') { %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        Pending
+                      </span>
+                    <% } else if (booking.status === 'APPROVED') { %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        Approved
+                      </span>
+                    <% } else { %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-500 border border-slate-700">
+                        Cancelled
+                      </span>
+                    <% } %>
+                  </td>
+                  <td class="px-6 py-4 flex items-center justify-center space-x-2">
+                    <!-- Approve Button -->
+                    <% if (booking.status !== 'APPROVED') { %>
+                      <form action="/admin/bookings/<%= booking.id %>/status" method="POST" class="inline">
+                        <input type="hidden" name="status" value="APPROVED">
+                        <button type="submit" class="px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white text-xs font-semibold transition-all">
+                          Approve
+                        </button>
+                      </form>
+                    <% } %>
+
+                    <!-- Cancel Button -->
+                    <% if (booking.status !== 'CANCELLED') { %>
+                      <form action="/admin/bookings/<%= booking.id %>/status" method="POST" class="inline">
+                        <input type="hidden" name="status" value="CANCELLED">
+                        <button type="submit" class="px-2.5 py-1 rounded bg-rose-500/15 text-rose-400 border border-rose-500/20 hover:bg-rose-505 hover:bg-rose-500 hover:text-white text-xs font-semibold transition-all">
+                          Cancel
+                        </button>
+                      </form>
+                    <% } %>
+
+                    <!-- Reset to Pending Button -->
+                    <% if (booking.status !== 'PENDING') { %>
+                      <form action="/admin/bookings/<%= booking.id %>/status" method="POST" class="inline">
+                        <input type="hidden" name="status" value="PENDING">
+                        <button type="submit" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700 hover:text-white text-xs font-semibold transition-all">
+                          Reset
+                        </button>
+                      </form>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Trip Packages Management Section -->
+    <div class="glass-card rounded-[2rem] overflow-hidden shadow-xl">
+      <div class="p-6 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 class="font-display font-bold text-xl text-white">Open Trip Packages</h2>
+          <p class="text-xs text-slate-400 mt-1">Add, update, or remove active adventure catalog entries</p>
+        </div>
+        <button 
+          onclick="openAddModal()"
+          class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-sky-500 text-white font-bold text-xs hover:shadow-lg transition-all"
+        >
+          + Add New Package
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm whitespace-nowrap">
+          <thead class="bg-slate-900/60 text-xs text-slate-400 uppercase font-semibold border-b border-slate-800/80">
+            <tr>
+              <th class="px-6 py-4">Image</th>
+              <th class="px-6 py-4">Title</th>
+              <th class="px-6 py-4">Destination</th>
+              <th class="px-6 py-4">Price</th>
+              <th class="px-6 py-4">Slots Left</th>
+              <th class="px-6 py-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/50">
+            <% if (trips.length === 0) { %>
+              <tr>
+                <td colspan="6" class="px-6 py-8 text-center text-slate-500">No trips configured. Add a package to start!</td>
+              </tr>
+            <% } else { %>
+              <% trips.forEach(function(trip) { %>
+                <tr class="hover:bg-slate-900/20 transition-colors">
+                  <td class="px-6 py-4">
+                    <div class="w-14 h-10 rounded-lg overflow-hidden border border-slate-700 bg-slate-850">
+                      <img src="<%= trip.imageUrl %>" alt="<%= trip.title %>" class="w-full h-full object-cover">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 font-semibold text-slate-200">
+                    <%= trip.title %>
+                  </td>
+                  <td class="px-6 py-4 text-slate-300"><%= trip.destination %></td>
+                  <td class="px-6 py-4 font-mono font-bold text-slate-100">$<%= trip.price.toLocaleString() %></td>
+                  <td class="px-6 py-4 font-mono text-xs">
+                    <% if (trip.slotsAvailable === 0) { %>
+                      <span class="text-rose-400 font-bold bg-rose-500/10 border border-rose-500/20 px-2.5 py-0.5 rounded-full">Sold Out</span>
+                    <% } else { %>
+                      <span class="text-emerald-400"><%= trip.slotsAvailable %> slots</span>
+                    <% } %>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <div class="inline-flex space-x-2">
+                      <!-- Edit trigger -->
+                      <button 
+                        onclick="openEditModal('<%= JSON.stringify(trip).replace(/'/g, "\\'") %>')"
+                        class="px-2.5 py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold hover:bg-slate-700 hover:text-white transition-colors"
+                      >
+                        Edit
+                      </button>
+
+                      <!-- Delete trigger -->
+                      <form action="/admin/trips/<%= trip.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this package? This will delete associated bookings.')">
+                        <button type="submit" class="px-2.5 py-1.5 rounded bg-rose-950/40 border border-rose-900/40 text-rose-400 text-xs font-semibold hover:bg-rose-600 hover:text-white transition-all">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- ADD PACKAGE MODAL -->
+  <div id="add-modal" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/60 backdrop-blur-sm hidden opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-modal w-full max-w-lg p-8 rounded-[2rem] shadow-2xl relative transform scale-95 transition-all duration-300" id="add-modal-content">
+      <button onclick="closeAddModal()" class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10">✕</button>
+      
+      <h3 class="font-display font-black text-2xl text-white mb-6">Create Open Trip Package</h3>
+      
+      <form action="/admin/trips" method="POST" class="space-y-4 text-xs font-medium">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label for="add-title" class="text-slate-300">Trip Title</label>
+            <input type="text" name="title" id="add-title" required placeholder="e.g. Bali Leisure Tour" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 text-sm focus:outline-none focus:border-teal-500">
+          </div>
+          <div class="space-y-1.5">
+            <label for="add-destination" class="text-slate-300">Destination</label>
+            <input type="text" name="destination" id="add-destination" required placeholder="e.g. Bali, Indonesia" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 text-sm focus:outline-none focus:border-teal-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label for="add-price" class="text-slate-300">Price ($)</label>
+            <input type="number" step="any" name="price" id="add-price" required placeholder="650" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 text-sm focus:outline-none focus:border-teal-500">
+          </div>
+          <div class="space-y-1.5">
+            <label for="add-slots" class="text-slate-300">Slots Available</label>
+            <input type="number" name="slotsAvailable" id="add-slots" required placeholder="12" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 text-sm focus:outline-none focus:border-teal-500">
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="add-image" class="text-slate-300">Image Asset URL (Leave empty for default)</label>
+          <input type="text" name="imageUrl" id="add-image" placeholder="/images/raja_ampat.png" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 text-sm focus:outline-none focus:border-teal-500">
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="add-desc" class="text-slate-300">Detailed Description</label>
+          <textarea name="description" id="add-desc" rows="4" required placeholder="Explain about destination logistics, lodging details, etc." class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 text-sm focus:outline-none focus:border-teal-500"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-teal-500 to-sky-500 text-white font-bold rounded-xl hover:shadow-lg transition-all text-sm mt-4">
+          Save Package
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT PACKAGE MODAL -->
+  <div id="edit-modal" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/60 backdrop-blur-sm hidden opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-modal w-full max-w-lg p-8 rounded-[2rem] shadow-2xl relative transform scale-95 transition-all duration-300" id="edit-modal-content">
+      <button onclick="closeEditModal()" class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10">✕</button>
+      
+      <h3 class="font-display font-black text-2xl text-white mb-6">Modify Trip Package</h3>
+      
+      <form id="edit-form" action="" method="POST" class="space-y-4 text-xs font-medium">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label for="edit-title" class="text-slate-300">Trip Title</label>
+            <input type="text" name="title" id="edit-title" required class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-500">
+          </div>
+          <div class="space-y-1.5">
+            <label for="edit-destination" class="text-slate-300">Destination</label>
+            <input type="text" name="destination" id="edit-destination" required class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label for="edit-price" class="text-slate-300">Price ($)</label>
+            <input type="number" step="any" name="price" id="edit-price" required class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-500">
+          </div>
+          <div class="space-y-1.5">
+            <label for="edit-slots" class="text-slate-300">Slots Available</label>
+            <input type="number" name="slotsAvailable" id="edit-slots" required class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-500">
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="edit-image" class="text-slate-300">Image Asset URL</label>
+          <input type="text" name="imageUrl" id="edit-image" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-500">
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="edit-desc" class="text-slate-300">Detailed Description</label>
+          <textarea name="description" id="edit-desc" rows="4" required class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-500"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-teal-500 to-sky-500 text-white font-bold rounded-xl hover:shadow-lg transition-all text-sm mt-4">
+          Save Changes
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Modal Helpers
+    const addModal = document.getElementById('add-modal');
+    const addContent = document.getElementById('add-modal-content');
+    const editModal = document.getElementById('edit-modal');
+    const editContent = document.getElementById('edit-modal-content');
+    const editForm = document.getElementById('edit-form');
+
+    function openAddModal() {
+      addModal.classList.remove('hidden');
+      void addModal.offsetWidth;
+      addModal.classList.remove('opacity-0', 'pointer-events-none');
+      addContent.classList.remove('scale-95');
+    }
+
+    function closeAddModal() {
+      addModal.classList.add('opacity-0', 'pointer-events-none');
+      addContent.classList.add('scale-95');
+      setTimeout(() => addModal.classList.add('hidden'), 300);
+    }
+
+    function openEditModal(tripJson) {
+      const trip = JSON.parse(tripJson);
+      
+      // Populate fields
+      document.getElementById('edit-title').value = trip.title;
+      document.getElementById('edit-destination').value = trip.destination;
+      document.getElementById('edit-price').value = trip.price;
+      document.getElementById('edit-slots').value = trip.slotsAvailable;
+      document.getElementById('edit-image').value = trip.imageUrl;
+      document.getElementById('edit-desc').value = trip.description;
+      
+      // Set Form Action URL
+      editForm.action = `/admin/trips/${trip.id}/update`;
+
+      editModal.classList.remove('hidden');
+      void editModal.offsetWidth;
+      editModal.classList.remove('opacity-0', 'pointer-events-none');
+      editContent.classList.remove('scale-95');
+    }
+
+    function closeEditModal() {
+      editModal.classList.add('opacity-0', 'pointer-events-none');
+      editContent.classList.add('scale-95');
+      setTimeout(() => editModal.classList.add('hidden'), 300);
+    }
+
+    // Close on overlay clicks
+    addModal.addEventListener('click', (e) => { if (e.target === addModal) closeAddModal(); });
+    editModal.addEventListener('click', (e) => { if (e.target === editModal) closeEditModal(); });
+  </script>
+
+</body>
+</html>

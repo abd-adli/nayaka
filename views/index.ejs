@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nayakatrip | Premium Adventure & Open-Trip Agency</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6', // Teal Accent
+              600: '#0d9488',
+              800: '#115e59',
+              900: '#134e4a',
+            },
+            journey: {
+              50: '#f0f9ff',
+              500: '#0ea5e9', // Ocean Blue
+              900: '#0c4a6e', // Deep Navy
+            }
+          },
+          boxShadow: {
+            'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+            'glass-hover': '0 12px 40px 0 rgba(31, 38, 135, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Anti-Gravity and Float Animations */
+    @keyframes float-slow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+    }
+    @keyframes float-medium {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(-1.5deg); }
+    }
+    @keyframes float-fast {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+
+    .animate-float-slow {
+      animation: float-slow 8s ease-in-out infinite;
+    }
+    .animate-float-medium {
+      animation: float-medium 6s ease-in-out infinite;
+    }
+    .animate-float-fast {
+      animation: float-fast 4s ease-in-out infinite;
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 10s ease-in-out infinite;
+    }
+
+    /* Glassmorphism utility */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    
+    .glass-card-dark {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen relative overflow-x-hidden selection:bg-brand-100 selection:text-brand-900">
+
+  <!-- Background Orbs -->
+  <div class="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-brand-100/50 rounded-full blur-[80px] sm:blur-[120px] -z-10 animate-pulse-soft"></div>
+  <div class="absolute top-[25%] right-[-10%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-journey-50/70 rounded-full blur-[90px] sm:blur-[140px] -z-10 animate-pulse-soft" style="animation-delay: 2s;"></div>
+  <div class="absolute bottom-[10%] left-[-5%] w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-brand-50/80 rounded-full blur-[70px] sm:blur-[100px] -z-10 animate-pulse-soft" style="animation-delay: 4s;"></div>
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 w-full glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="flex items-center group" aria-label="Nayakatrip home">
+        <img src="/images/logo.png" alt="Nayakatrip logo" class="h-10 sm:h-12 w-auto max-w-[140px] object-contain shadow-lg shadow-brand-500/20 transform group-hover:scale-105 transition-transform duration-300">
+      </a>
+
+      <!-- Desktop Links -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-journey-900/80">
+        <a href="#home" class="hover:text-brand-600 transition-colors duration-200">Home</a>
+        <a href="#destinations" class="hover:text-brand-600 transition-colors duration-200">Open Trips</a>
+        <a href="#about" class="hover:text-brand-600 transition-colors duration-200">Why Us</a>
+        <!-- <a href="/admin" class="px-4 py-2 rounded-full border border-journey-900/10 hover:border-brand-500 hover:text-brand-600 transition-all duration-300">Admin Area</a> -->
+      </nav>
+
+      <!-- Action Button & Mobile Burger Trigger -->
+      <div class="flex items-center space-x-3">
+        <a href="#destinations" class="hidden sm:inline-block px-5 py-2 sm:px-6 sm:py-2.5 rounded-full bg-journey-900 text-white font-semibold text-xs sm:text-sm hover:bg-brand-600 shadow-md transition-all duration-300">
+          Explore Trips
+        </a>
+        <button id="mobile-menu-btn" class="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-white/40 border border-white/80 text-journey-900 hover:bg-white/60 focus:outline-none transition-all shadow-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Dropdown -->
+  <div id="mobile-menu" class="hidden fixed top-16 left-0 w-full glass-nav z-30 border-t border-slate-200/50 flex flex-col p-6 space-y-4 shadow-xl transition-all duration-300 transform scale-95 opacity-0 origin-top">
+    <a href="#home" onclick="toggleMobileMenu()" class="text-base font-semibold text-journey-900 hover:text-brand-600 transition-colors">Home</a>
+    <a href="#destinations" onclick="toggleMobileMenu()" class="text-base font-semibold text-journey-900 hover:text-brand-600 transition-colors">Open Trips</a>
+    <a href="#about" onclick="toggleMobileMenu()" class="text-base font-semibold text-journey-900 hover:text-brand-600 transition-colors">Why Us</a>
+    <a href="/admin" onclick="toggleMobileMenu()" class="text-base font-semibold text-journey-900 hover:text-brand-600 transition-colors">Admin Area</a>
+    <a href="#destinations" onclick="toggleMobileMenu()" class="sm:hidden w-full text-center py-3 rounded-full bg-journey-900 text-white font-bold shadow-md">Explore Trips</a>
+  </div>
+
+  <!-- Notification Banner -->
+  <% if (typeof message !== 'undefined' && message) { %>
+    <div id="toast-success" class="fixed bottom-6 left-6 right-6 sm:left-auto sm:right-6 z-50 glass-card bg-emerald-50/95 border border-emerald-250 shadow-2xl rounded-2xl p-4 max-w-sm flex items-start space-x-3 transition-all">
+      <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs shrink-0 font-bold">✓</div>
+      <div class="flex-1">
+        <h4 class="font-bold text-emerald-950 text-sm">Success!</h4>
+        <p class="text-emerald-800 text-xs mt-0.5"><%= message %></p>
+      </div>
+      <button onclick="document.getElementById('toast-success').remove()" class="text-emerald-500 hover:text-emerald-800 font-bold text-xs pl-2">✕</button>
+    </div>
+  <% } %>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div id="toast-error" class="fixed bottom-6 left-6 right-6 sm:left-auto sm:right-6 z-50 glass-card bg-rose-50/95 border border-rose-250 shadow-2xl rounded-2xl p-4 max-w-sm flex items-start space-x-3 transition-all">
+      <div class="w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-white text-xs shrink-0 font-bold">✕</div>
+      <div class="flex-1">
+        <h4 class="font-bold text-rose-950 text-sm">Error</h4>
+        <p class="text-rose-800 text-xs mt-0.5"><%= error %></p>
+      </div>
+      <button onclick="document.getElementById('toast-error').remove()" class="text-rose-500 hover:text-rose-800 font-bold text-xs pl-2">✕</button>
+    </div>
+  <% } %>
+
+  <!-- Hero Section -->
+  <section id="home" class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-16 md:pt-12 md:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+    <!-- Hero Text (Left) -->
+    <div class="lg:col-span-7 space-y-6 md:space-y-8 text-center lg:text-left">
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full glass-card border-brand-500/20 text-brand-600 text-[10px] sm:text-xs font-semibold tracking-wider uppercase shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></span>
+        <span>OPEN TRIP ANTI-MACET WEEKEND</span>
+      </div>
+      
+      <h1 class="font-display font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-journey-900 leading-[1.12] tracking-tight">
+        Tua di Jalan ke Puncak? <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-journey-500">Mending </span>
+         Explore Majalengka.
+      </h1>
+
+      <p class="text-sm sm:text-base md:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+        Waktu tempuh sama, tapi bebas macet buka-tutup. Nikmati open trip premium ke terasering hijau, telaga bening, dan air terjun tersembunyi Majalengka tanpa stres di tol..
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 max-w-md mx-auto lg:max-w-none">
+        <a href="#destinations" class="w-full sm:w-auto text-center px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-journey-900 to-brand-800 text-white font-bold text-sm sm:text-base shadow-xl shadow-journey-900/10 hover:shadow-journey-900/30 hover:-translate-y-0.5 transition-all duration-300">
+          Amankan Slot 
+        </a>
+        <a href="#about" class="w-full sm:w-auto text-center px-8 py-3.5 sm:py-4 rounded-full glass-card hover:bg-white text-journey-900 font-bold text-sm sm:text-base border border-slate-200/80 hover:-translate-y-0.5 transition-all duration-300">
+          Lihat Destinasi
+        </a>
+      </div>
+
+      <!-- Key Figures -->
+      <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/50 max-w-md mx-auto lg:mx-0">
+        <div class="text-center lg:text-left">
+          <div class="font-display font-extrabold text-2xl sm:text-3xl text-journey-900">1.2k+</div>
+          <div class="text-[9px] sm:text-xs text-slate-500 font-medium uppercase tracking-wider mt-1">Explorers</div>
+        </div>
+        <div class="text-center lg:text-left">
+          <div class="font-display font-extrabold text-2xl sm:text-3xl text-journey-900">45+</div>
+          <div class="text-[9px] sm:text-xs text-slate-500 font-medium uppercase tracking-wider mt-1">Destinations</div>
+        </div>
+        <div class="text-center lg:text-left">
+          <div class="font-display font-extrabold text-2xl sm:text-3xl text-journey-900">4.9★</div>
+          <div class="text-[9px] sm:text-xs text-slate-500 font-medium uppercase tracking-wider mt-1">Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Image Card (Right) -->
+    <div class="lg:col-span-5 relative flex justify-center lg:justify-end mt-8 lg:mt-0">
+      <!-- Decorative Background Grid -->
+      <div class="absolute top-[-5%] right-[-5%] w-56 h-56 sm:w-72 sm:h-72 border-2 border-dashed border-journey-900/5 rounded-full pointer-events-none"></div>
+      
+      <!-- Primary Floating Glass Card Wrapper -->
+      <div class="relative w-full max-w-[280px] sm:max-w-sm aspect-[4/5] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-journey-900/15 transform hover:scale-[1.02] transition-transform duration-500 ease-out animate-float-slow">
+        <img src="/images/GREEN CANYON 3.jpg" alt="Raja Ampat Luxury Retreat" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-journey-900/90 via-journey-900/30 to-transparent"></div>
+        
+        <!-- Anti-Gravity Floating Element inside Hero -->
+        <div class="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 glass-card bg-white/70 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-white/40 shadow-xl space-y-2.5 sm:space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-[9px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-brand-100 text-brand-900 uppercase">Featured Journey</span>
+            <span class="text-[9px] sm:text-xs font-bold text-slate-500">Only 4 slots left!</span>
+          </div>
+          <h3 class="font-display font-bold text-base sm:text-lg text-journey-900 leading-tight">Majalengka Green Canyon Escape</h3>
+          <p class="text-[10px] sm:text-xs text-slate-600 leading-relaxed font-light line-clamp-2">Explore Terasering Panyaweuyan, Situ Cipanten, dan kulineran lokal khas Kota Angin.</p>
+          <div class="flex justify-between items-center pt-2 border-t border-slate-200/50">
+            <div>
+              <span class="text-[9px] sm:text-xs text-slate-400 font-medium">Mulai dari</span>
+              <div class="text-base sm:text-lg font-display font-black text-brand-900">Rp. 850.000</div>
+            </div>
+            <a href="#destinations" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-journey-900 text-white rounded-full text-[10px] sm:text-xs font-bold hover:bg-brand-600 transition-colors duration-300">
+              Cek Jadwal
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Small secondary floating badge card (hidden on mobile to prevent overflow) -->
+      <div class="hidden sm:flex absolute top-12 left-[-5%] glass-card bg-white/80 border border-white/50 p-4 rounded-2xl shadow-xl items-center space-x-3 animate-float-medium" style="animation-delay: 1.5s;">
+        <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-bold">✓</div>
+        <div>
+          <div class="text-xs font-bold text-slate-900">Verified Agents</div>
+          <div class="text-[10px] text-slate-500">24/7 Concierge Care</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Trips Packages -->
+  <section id="destinations" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24 border-t border-slate-200/60 relative">
+    <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
+      <div class="text-[10px] sm:text-xs font-bold tracking-widest text-brand-600 uppercase">Our Curated Journeys</div>
+      <h2 class="font-display font-extrabold text-2xl sm:text-4xl text-journey-900">Active Open Trips</h2>
+      <p class="text-sm sm:text-base text-slate-600 font-light">Pilih tanggal main lo dan bersiap explore keindahan alam Majalengka. Semua paket udah di-design lengkap dengan fasilitas premium, itinerary santai, dan pastinya bebas stres!</p>
+    </div>
+
+    <!-- Trips Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <% if (trips.length === 0) { %>
+        <div class="col-span-full text-center py-12 glass-card rounded-3xl p-8 text-slate-500">
+          No active trips scheduled at this moment. Check back later or contact us.
+        </div>
+      <% } else { %>
+        <% trips.forEach(function(trip) { %>
+          <!-- Floating Package Card -->
+          <div class="glass-card hover:bg-white/95 rounded-[2rem] overflow-hidden group shadow-glass hover:shadow-glass-hover hover:-translate-y-3 transform transition-all duration-500 ease-out flex flex-col min-h-[460px] sm:min-h-[500px]">
+            <!-- Image Area -->
+            <div class="h-48 sm:h-60 overflow-hidden relative">
+              <img src="<%= trip.imageUrl %>" alt="<%= trip.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              
+              <!-- Location tag -->
+              <span class="absolute top-4 left-4 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full bg-white/90 text-journey-900 shadow-md backdrop-blur-sm">
+                <%= trip.destination %>
+              </span>
+
+              <!-- Slots left badge -->
+              <% if (trip.slotsAvailable <= 0) { %>
+                <span class="absolute top-4 right-4 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full bg-rose-500 text-white shadow-md">
+                  Fully Booked
+                </span>
+              <% } else if (trip.slotsAvailable <= 4) { %>
+                <span class="absolute top-4 right-4 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full bg-amber-500 text-white shadow-md animate-pulse">
+                  Only <%= trip.slotsAvailable %> Left!
+                </span>
+              <% } else { %>
+                <span class="absolute top-4 right-4 text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500 text-white shadow-md">
+                  <%= trip.slotsAvailable %> slots available
+                </span>
+              <% } %>
+            </div>
+
+            <!-- Content Area -->
+            <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div class="space-y-2">
+                <h3 class="font-display font-bold text-lg sm:text-xl text-journey-900 group-hover:text-brand-600 transition-colors duration-200">
+                  <%= trip.title %>
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-500 leading-relaxed font-light line-clamp-3">
+                  <%= trip.description %>
+                </p>
+              </div>
+
+              <!-- Card Footer -->
+              <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                <div>
+                  <span class="text-[10px] text-slate-400 block font-medium">Price per guest</span>
+                  <span class="font-display font-black text-xl sm:text-2xl text-journey-900">$<%= trip.price.toLocaleString() %></span>
+                </div>
+                
+                <% if (trip.slotsAvailable > 0) { %>
+                  <button 
+                    onclick="openBookingModal('<%= trip.id %>', '<%= trip.title %>', '<%= trip.price %>')"
+                    class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-journey-900 text-white text-xs font-bold hover:bg-brand-600 hover:shadow-lg transition-all duration-300"
+                  >
+                    Book Seat
+                  </button>
+                <% } else { %>
+                  <button 
+                    disabled 
+                    class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-slate-200 text-slate-400 text-xs font-bold cursor-not-allowed"
+                  >
+                    Sold Out
+                  </button>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section id="about" class="bg-gradient-to-b from-transparent to-brand-50/20 py-16 md:py-24 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <!-- Visual (Bottom on mobile, Left on desktop) -->
+      <div class="relative flex justify-center order-2 lg:order-1">
+        <div class="absolute inset-0 bg-brand-500/10 rounded-full filter blur-2xl animate-pulse-soft"></div>
+        <div class="relative w-full max-w-[280px] sm:max-w-md aspect-[4/3] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl transform animate-float-medium">
+          <img src="/images/ubud_villa.png" alt="Premium Escape" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-journey-900/60 to-transparent"></div>
+          <div class="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 text-white text-shadow">
+            <h4 class="font-display font-bold text-sm sm:text-lg">Vibe Healing Maksimal</h4>
+            <p class="text-[10px] sm:text-xs text-white/80 font-light mt-1">Setiap sudut penginapan, jadwal trip, dan spot foto udah kita pilih yang paling terbaik buat lo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text (Top on mobile, Right on desktop) -->
+      <div class="space-y-6 sm:space-y-8 order-1 lg:order-2 text-center lg:text-left">
+        <div class="text-[10px] sm:text-xs font-bold tracking-widest text-brand-600 uppercase">Why Choose Us</div>
+        <h2 class="font-display font-extrabold text-2xl sm:text-4xl text-journey-900 leading-tight">Cara Nyaman Nikmati Liburan Tanpa Pusing</h2>
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">Nayakatrip beda dari open trip murahan yang asal angkut. Kita kurasi perjalanan kalian biar dapet vibe liburan private yang estetik, nyaman, dan berkesan. Cocok buat kalian yang nyari ketenangan, suka foto-foto, dan ogah ribet.</p>
+        
+        <!-- Feature items -->
+        <div class="space-y-5 sm:space-y-6 max-w-md sm:max-w-xl mx-auto lg:mx-0 text-left">
+          <div class="flex items-start space-x-3 sm:space-x-4">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-brand-100 flex items-center justify-center text-brand-600 shrink-0 font-bold shadow-md shadow-brand-500/5 text-sm sm:text-base">⭐</div>
+            <div>
+              <h4 class="font-bold text-sm sm:text-base text-journey-900">Penginapan & Villa Estetik</h4>
+              <p class="text-xs sm:text-sm text-slate-500 font-light mt-0.5 sm:mt-1">Gak ada cerita tidur berdesakan. Kita pilih villa atau resort bernuansa alam yang bersih, Instagramable, dan nyaman buat istirahat.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 sm:space-x-4">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-brand-100 flex items-center justify-center text-brand-600 shrink-0 font-bold shadow-md shadow-brand-500/5 text-sm sm:text-base">🥗</div>
+            <div>
+              <h4 class="font-bold text-sm sm:text-base text-journey-900">Kuliner Lokal Premium (100% Halal)</h4>
+              <p class="text-xs sm:text-sm text-slate-500 font-light mt-0.5 sm:mt-1">Makan kenyang dan enak! Menu makanan dikurasi dari tempat kuliner lokal terbaik, higienis, sehat, dan pastinya dijamin 100% halal.</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 sm:space-x-4">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-brand-100 flex items-center justify-center text-brand-600 shrink-0 font-bold shadow-md shadow-brand-500/5 text-sm sm:text-base">🎒</div>
+            <div>
+              <h4 class="font-bold text-sm sm:text-base text-journey-900">Grup Terbatas & Intimate</h4>
+              <p class="text-xs sm:text-sm text-slate-500 font-light mt-0.5 sm:mt-1">Satu grup dibatasi cuma 8-15 orang aja. Lebih private, gak kaku, dan gak perlu nunggu lama-lama pas pindah destinasi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-journey-900 text-white pt-12 pb-8 sm:pt-16 sm:pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 border-b border-white/10 pb-8 sm:pb-12 mb-8 sm:mb-12">
+      <!-- Brand column -->
+      <div class="space-y-4 col-span-1 md:col-span-2 text-center md:text-left">
+        <div class="flex items-center justify-center md:justify-start">
+          <img src="/images/logo.png" alt="Nayakatrip logo" class="h-10 w-auto max-w-[140px] object-contain shadow-lg">
+        </div>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-light max-w-sm mx-auto md:mx-0">Crafting premium, high-end travel retreats and open-trip expeditions for adventurers who enjoy the finer details in life.</p>
+      </div>
+
+      <!-- Links Column -->
+      <div class="text-center md:text-left">
+        <h4 class="font-semibold text-xs sm:text-sm tracking-wider uppercase text-brand-500 mb-3 sm:mb-4">Navigations</h4>
+        <ul class="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
+          <li><a href="#home" class="hover:text-white transition-colors duration-200">Home</a></li>
+          <li><a href="#destinations" class="hover:text-white transition-colors duration-200">Active Open Trips</a></li>
+          <li><a href="#about" class="hover:text-white transition-colors duration-200">Why Us</a></li>
+          <li><a href="/admin/login" class="hover:text-white transition-colors duration-200">Agent Login</a></li>
+        </ul>
+      </div>
+
+      <!-- Contacts Column -->
+      <div class="text-center md:text-left">
+        <h4 class="font-semibold text-xs sm:text-sm tracking-wider uppercase text-brand-500 mb-3 sm:mb-4">Contact</h4>
+        <p class="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+          Ubud Eco-Street, Villa Block 14<br>
+          Gianyar, Bali, Indonesia<br>
+          <span class="block mt-2 font-semibold text-white">hello@nayakatrip.com</span>
+          <span class="text-white font-semibold">+62 812 3456 7890</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Bottom copyrights -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between text-[10px] sm:text-xs text-slate-400 font-light space-y-3 sm:space-y-0">
+      <div>© 2026 Nayakatrip Travel Agency. All rights reserved.</div>
+      <div class="flex space-x-4 sm:space-x-6">
+        <a href="#" class="hover:text-white">Privacy Policy</a>
+        <a href="#" class="hover:text-white">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Booking Modal -->
+  <div 
+    id="booking-modal" 
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/45 backdrop-blur-md hidden transition-all duration-300 opacity-0 pointer-events-none"
+  >
+    <!-- Glassmorphic Modal Box -->
+    <div 
+      class="glass-card-dark text-white w-full max-w-md p-6 sm:p-8 rounded-2xl sm:rounded-[2rem] border border-white/20 shadow-2xl relative transform scale-95 transition-all duration-300 max-h-[90vh] overflow-y-auto"
+      id="booking-modal-content"
+    >
+      <!-- Close Button -->
+      <button 
+        onclick="closeBookingModal()"
+        class="absolute top-4 sm:top-6 right-4 sm:right-6 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/80 hover:text-white hover:bg-white/25 transition-all focus:outline-none"
+      >
+        ✕
+      </button>
+
+      <div class="space-y-4 sm:space-y-6">
+        <div>
+          <div class="text-[10px] sm:text-xs font-bold text-brand-500 uppercase tracking-widest">Reserve Your Seat</div>
+          <h3 class="font-display font-black text-xl sm:text-2xl mt-1">Booking Request</h3>
+          <p class="text-[10px] sm:text-xs text-slate-300 mt-1 font-light leading-relaxed">Fill out your contact details. Our team will verify slot availability and contact you via WhatsApp for deposit details.</p>
+        </div>
+
+        <form action="/book" method="POST" class="space-y-4">
+          <!-- Hidden Trip ID -->
+          <input type="hidden" name="tripId" id="modal-trip-id">
+
+          <!-- Trip details display -->
+          <div class="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 space-y-1">
+            <div class="text-[9px] sm:text-[10px] text-slate-400 uppercase font-semibold">Selected Trip</div>
+            <div class="font-display font-bold text-xs sm:text-sm text-brand-100" id="modal-trip-title">Raja Ampat Luxury Retreat</div>
+            <div class="text-xs text-slate-300" id="modal-trip-price">$1,250</div>
+          </div>
+
+          <!-- Name field -->
+          <div class="space-y-1">
+            <label for="customerName" class="text-[11px] sm:text-xs font-semibold text-slate-300">Full Name</label>
+            <input 
+              type="text" 
+              name="customerName" 
+              id="customerName" 
+              required
+              placeholder="e.g. John Doe"
+              class="w-full px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/15 text-white placeholder-white/30 text-xs sm:text-sm focus:outline-none focus:border-brand-500 focus:bg-white/10 transition-all"
+            >
+          </div>
+
+          <!-- WhatsApp field -->
+          <div class="space-y-1">
+            <label for="customerPhone" class="text-[11px] sm:text-xs font-semibold text-slate-300">WhatsApp Phone Number</label>
+            <input 
+              type="tel" 
+              name="customerPhone" 
+              id="customerPhone" 
+              required
+              placeholder="e.g. +628123456789"
+              class="w-full px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/15 text-white placeholder-white/30 text-xs sm:text-sm focus:outline-none focus:border-brand-500 focus:bg-white/10 transition-all"
+            >
+          </div>
+
+          <button 
+            type="submit"
+            class="w-full py-3 sm:py-4 rounded-lg sm:rounded-xl bg-gradient-to-r from-brand-500 to-journey-500 text-white font-bold text-xs sm:text-sm shadow-xl shadow-brand-500/10 hover:shadow-brand-500/30 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 mt-2 focus:outline-none"
+          >
+            Submit Booking Request
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu toggle logic
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    function toggleMobileMenu() {
+      const isHidden = mobileMenu.classList.contains('hidden');
+      if (isHidden) {
+        mobileMenu.classList.remove('hidden');
+        void mobileMenu.offsetWidth; // force reflow
+        mobileMenu.classList.remove('scale-95', 'opacity-0');
+        menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+      } else {
+        mobileMenu.classList.add('scale-95', 'opacity-0');
+        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+        }, 300);
+      }
+    }
+
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+
+    // Modal logic
+    const modal = document.getElementById('booking-modal');
+    const modalContent = document.getElementById('booking-modal-content');
+    const modalTripId = document.getElementById('modal-trip-id');
+    const modalTripTitle = document.getElementById('modal-trip-title');
+    const modalTripPrice = document.getElementById('modal-trip-price');
+
+    function openBookingModal(tripId, tripTitle, tripPrice) {
+      modalTripId.value = tripId;
+      modalTripTitle.textContent = tripTitle;
+      modalTripPrice.textContent = `$${parseFloat(tripPrice).toLocaleString()}`;
+      
+      modal.classList.remove('hidden');
+      void modal.offsetWidth;
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modalContent.classList.remove('scale-95');
+    }
+
+    function closeBookingModal() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modalContent.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    }
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeBookingModal();
+      }
+    });
+  </script>
+</body>
+</html>

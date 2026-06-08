@@ -1,0 +1,36 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int    @id @default(autoincrement())
+  username     String @unique
+  passwordHash String
+  role         String @default("admin")
+}
+
+model Trip {
+  id             Int       @id @default(autoincrement())
+  title          String
+  destination    String
+  price          Float
+  slotsAvailable Int
+  imageUrl       String
+  description    String
+  bookings       Booking[]
+}
+
+model Booking {
+  id            Int      @id @default(autoincrement())
+  customerName  String
+  customerPhone String
+  tripId        Int
+  trip          Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  status        String   @default("PENDING") // PENDING, APPROVED, CANCELLED
+  createdAt     DateTime @default(now())
+}
