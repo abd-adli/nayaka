@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js"
-    "vercel-build": "npx prisma generate"
+    "vercel-build": "prisma generate && node server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.10.0",
