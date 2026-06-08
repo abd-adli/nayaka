@@ -4,9 +4,9 @@
   "description": "Premium Adventure and Travel Agency Website",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
-    "vercel-build": "prisma generate && node server.js"
+  "build": "prisma generate",
+  "start": "node server.js",
+  "dev": "node --watch server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.10.0",
